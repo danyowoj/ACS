@@ -1,31 +1,30 @@
 #!/bin/bash
 
-# Получение информации об операционной системе
-os_name=$(lsb_release -s -d)
-os_version=$(lsb_release -s -r)
+# Информация об ОС
+echo "The operating system:"
+# lsb_release используется для получения информации об используемом дистрибутиве Linux
+echo "$(lsb_release -d)" # -d для вывода названия дистрибутива
+echo "$(lsb_release -r)" # -r для вывода номера релиза дистрибутива
+echo
 
-# Получение информации о ядре
-kernel_version=$(uname -r)
-kernel_arch=$(uname -m)
+# Информация о ядре
+echo "The Linux kernel:"
+# uname - получает название ядра и информацию о нем 
+echo "Kernel release: $(uname -r)" # -r выводит информацию о выпуске ядра
+echo "Machine:        $(uname -m)" # -m выводит тип оборудования машины
+echo
 
-# Получение информации о процессоре
-cpu_model=$(cat /proc/cpuinfo | grep "model name" | head -n 1 | cut -d ":" -f 2 | sed 's/^[ \t]*//;s/[ \t]*$//')
-cpu_freq=$(cat /proc/cpuinfo | grep "cpu MHz" | head -n 1 | cut -d ":" -f 2 | sed 's/^[ \t]*//;s/[ \t]*$//')
-cpu_cores=$(cat /proc/cpuinfo | grep "cpu cores" | head -n 1 | cut -d ":" -f 2 | sed 's/^[ \t]*//;s/[ \t]*$//')
-cpu_cache=$(cat /proc/cpuinfo | grep "cache size" | head -n 1 | cut -d ":" -f 2 | sed 's/^[ \t]*//;s/[ \t]*$//')
+# Информация о процессоре
+echo "CPU:"
+echo "Model name:    $(cat /proc/cpuinfo | grep 'model name' | head -n 1 | cut -f2 -d':')"
+echo "CPU MHz:       $(cat /proc/cpuinfo | grep 'cpu MHz' | head -n 1 | cut -f2 -d':')"
+echo "CPU cores:     $(cat /proc/cpuinfo | grep 'cpu cores' | head -n 1 | cut -f2 -d':')"
+echo "Cache size:    $(cat /proc/cpuinfo | grep 'cache size' | head -n 1 | cut -f2 -d':')"
+echo
 
-# Получение информации об оперативной памяти
-mem_total=$(free -h | grep "Mem:" | awk '{print $2}')
-mem_used=$(free -h | grep "Mem:" | awk '{print $3}')
-mem_available=$(free -h | grep "Mem:" | awk '{print $7}')
-
-# Вывод информации
-echo "Operating System: $os_name ($os_version)"
-echo "Kernel Version: $kernel_version ($kernel_arch)"
-echo "CPU Model: $cpu_model"
-echo "CPU Frequency: $cpu_freq MHz"
-echo "CPU Cores: $cpu_cores"
-echo "CPU Cache: $cpu_cache"
-echo "Total Memory: $mem_total"
-echo "Used Memory: $mem_used"
-echo "Available Memory: $mem_available"
+# Информация об оперативной памяти
+echo "RAM:"
+echo "Available:      $(free -h | grep Mem | awk '{print $4}')"
+echo "Total:          $(free -h | grep Mem | awk '{print $2}')"
+echo "Used:           $(free -h | grep Mem | awk '{print $3}')"
+echo
