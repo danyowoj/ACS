@@ -19,7 +19,8 @@ echo "CPU:"
 echo "Model name:    $(cat /proc/cpuinfo | grep 'model name' | head -n 1 | cut -f2 -d':')"
 echo "CPU MHz:       $(cat /proc/cpuinfo | grep 'cpu MHz' | head -n 1 | cut -f2 -d':')"
 echo "CPU cores:     $(cat /proc/cpuinfo | grep 'cpu cores' | head -n 1 | cut -f2 -d':')"
-echo "Cache size:    $(cat /proc/cpuinfo | grep 'cache size' | head -n 1 | cut -f2 -d':')"
+echo "Cache:         "         $(lscpu | grep 'cache')
+#echo "Cache size:    $(cat /proc/cpuinfo | grep 'cache size' | head -n 1 | cut -f2 -d':')"
 echo
 
 # Информация об оперативной памяти
