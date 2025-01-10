@@ -1,4 +1,17 @@
-### Создаем ssl для домена, на котором будет находиться jenkins
+На 4: Запуск jenkins и разработка сценариев CD
+DoD:
+
+Интерфейс доступен по https (jenkins)
+
+В jenkins создан пайплайн/задача/таск, работающий с репозиторием gitlab/github
+При изменении в репозитории автоматически запускается задача обновления docker-контейнера с содержимым репозитория (Либо сборка образа с новым приложением и обновление контейнера)
+
+Оформить как docker-compose.yml
+
+При пересоздании проекта, все настройки jenkins должны сохраниться
+
+
+Создаем ssl для домена, на котором будет находиться jenkins
 ```
 sudo apt install mkcert
 mkcert -install
@@ -75,6 +88,13 @@ docker ps
 Создаем pipeline:
 - В *GitHub project* указываем URL репозитория
 - Включаем *GitHub hook trigger for GITScm polling*
+- Включаем *Опрашивать SCM об изменениях*
+- В расписании указываем
+```
+
+H/15 * * * *
+```
+для опроса каждые 15 минут
 - В части *Pipeline -> Definition* выбираем *Pipeline script from SCM*
 - В *SCM* выбираем *Git*
 - В *Repository URL* вставляем URL репозитория
@@ -95,30 +115,3 @@ pipeline {
     }
 }
 ```
-Натсроим webhook при помощи ngrok. Его необходимо установить на нашу хост машину, делается это командой:
-```
-curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | \
-sudo gpg --dearmor -o /etc/apt/keyrings/ngrok.gpg && \
-echo "deb [signed-by=/etc/apt/keyrings/ngrok.gpg]
-https://ngrok-agent.s3.amazonaws.com buster main" | \
-sudo tee /etc/apt/sources.list.d/ngrok.list && \
-sudo apt update && sudo apt install ngrok
-```
-Также необходимо зарегистрировать аккаунт на сайте и
-скопировать содержимое токена в личном кабинете, после чего
-выполнить команду:
-```
-ngrok config add-authtoken <TOKEN>
-```
-Создаем постоянное подключение с нашим nginx для дальнейшей
-ретрансляции трафика в jenkins с помощью следующей команды:
-```
-ngrok http 443
-```
-Теперь мы можем настроить webhooks на нашем репозитории github
-вставив URL, который сгенерировал ngrok.
-
-- В *Payload URL* вставляем URL, который сгенерировал ngrok, добавив */github-webhook/* в конце строки
-- В *Content type* выбираем *application/x-www-form-urlencoded*
-- Ставим галочку в поле *Active*
-
